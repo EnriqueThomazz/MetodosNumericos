@@ -9,6 +9,8 @@ class ElimGaussiana():
 
     x = []
 
+    escalas = []
+
     def __init__(self, matriz, tec_pivoteamento, truncar=None):
         self.matriz = matriz
         self.dimensao = len(matriz)
@@ -19,6 +21,9 @@ class ElimGaussiana():
 
         self.truncar = truncar
 
+        if tec_pivoteamento == "escala":
+            self.escalas = [None] * self.dimensao
+
     def pivo_parcial(self):
         index_max = self.n_rodada
 
@@ -27,6 +32,31 @@ class ElimGaussiana():
                 index_max = i
 
         self.matriz[self.n_rodada], self.matriz[index_max] = self.matriz[index_max], self.matriz[self.n_rodada] #Troca as linhas
+
+    def pivo_escala(self):
+        if self.escalas[0] == None: #preenchendo a lista de escalas
+            for i in range(self.dimensao):
+                max = abs(self.matriz[i][0])
+                for j in range(self.dimensao):
+                    if abs(self.matriz[i][j]) > max: #Buscando o maior, em módulo
+                        max = abs(self.matriz[i][j])
+
+                self.escalas[i] = max
+
+
+        index_max = self.n_rodada
+
+        for i in range(self.n_rodada, self.dimensao): #Iterando da linha n_rodada até o fim da matriz
+            dif = self.matriz[i][self.n_rodada] / self.escalas[i]
+            
+            if abs(dif) > abs(self.matriz[index_max][self.n_rodada] / self.escalas[index_max]): #Se o elemento for maior do que o da diagonal principal dividido pela escala da linha
+                index_max = i
+
+        self.matriz[self.n_rodada], self.matriz[index_max] = self.matriz[index_max], self.matriz[self.n_rodada] #Troca as linhas
+
+
+
+        
 
     def truncar_num(self, num): #Função feia que só jesus, deve ter um modo mais inteligente de fazer isso
         d = 2
@@ -47,6 +77,8 @@ class ElimGaussiana():
         #Pivoteamento
         if self.tec_pivoteamento == "parcial":
             self.pivo_parcial()
+        elif self.tec_pivoteamento == "escala":
+            self.pivo_escala()
 
         for i in range(self.n_rodada+1, self.dimensao): #Iterando pelas linhas a serem eliminadas
             m = self.matriz[i][self.n_rodada] / self.matriz[self.n_rodada][self.n_rodada] #Definindo nosso m
@@ -79,8 +111,8 @@ class ElimGaussiana():
 
 
     def resolver(self):
-        for c in range(self.dimensao): # Se temos n variaveis teremos n-1 rodadas.
-            
+        for c in range(self.dimensao-1): # Se temos n variaveis teremos n-1 rodadas.
+
             self.eliminar() #Zerando a coluna
             self.n_rodada += 1
 
