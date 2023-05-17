@@ -5,7 +5,7 @@ from matrizes_exemplos import *
 
 
 #Eliminação Gaussiana
-#Não implementadas outras tecnicas de pivoteamento
+#Tecnicas de pivoteamento "parcial" e "escala"
 #eg = ElimGaussiana(matriz_ex3, "parcial", truncar=4)
 #eg.resolver()
 
