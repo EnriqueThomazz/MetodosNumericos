@@ -46,15 +46,15 @@ class GaussJacobi():
         max = self.precisao
         max_x = 1
         for i in range(self.dimensao):
-            d = self.aprox_atual[i] - self.aprox_anterior[i]
+            d = abs(self.aprox_atual[i] - self.aprox_anterior[i])
 
             if d > max:
                 max = d
 
         if self.crit_parada != "absoluto": #Se for erro relativo
             for i in range(self.dimensao):
-                if self.aprox_atual[i] > max_x:
-                    max_x = self.aprox_atual[i]
+                if abs(self.aprox_atual[i]) > max_x:
+                    max_x = abs(self.aprox_atual[i])
 
         if max/max_x <= self.precisao:
             return True #Para

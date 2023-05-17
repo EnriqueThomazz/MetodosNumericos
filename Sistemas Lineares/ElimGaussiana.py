@@ -79,8 +79,8 @@ class ElimGaussiana():
 
 
     def resolver(self):
-        for c in range(self.dimensao-1): # Se temos n variaveis teremos n-1 rodadas adiciona-se mais um -1 devido à coluna dos b's
-
+        for c in range(self.dimensao): # Se temos n variaveis teremos n-1 rodadas.
+            
             self.eliminar() #Zerando a coluna
             self.n_rodada += 1
 
