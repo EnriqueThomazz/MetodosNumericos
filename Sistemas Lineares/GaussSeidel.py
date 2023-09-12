@@ -1,74 +1,66 @@
-from GaussJacobi import GaussJacobi
+def GaussSeidel(matriz, chute_inicial, precisao):
+    # Verificar convergencia por Sassenfeld
+    print("Verificando convergencia")
+    for i in range(len(matriz)):
+        alfa = 0
 
-class GaussSeidel(GaussJacobi):
+        for j in range(len(matriz)):
+            if i != j:
+                alfa += abs(matriz[i][j])
+        try:
+            alfa = alfa/abs(matriz[i][i])
+        except:
+            print("Elemento nulo na diagonal principal")
+            return
 
-    def verif_sassenfeld(self):
-        betas = [None] * self.dimensao
+        print("Alfa_{}: {}".format(i, alfa))
 
-        for i in range(self.dimensao):
-            soma = 0
-            for j in range(self.dimensao):
-                if i != j:
-                    if betas[j] != None:
-                        beta = betas[j]
-                    else:
-                        beta = 1
-
-                    soma += abs(self.matriz[i][j]) * beta
-
-            betas[i] = abs(soma/self.matriz[i][i])
-
-            print("Beta {}: {}".format(i, betas[i]))
-            
-            if betas[i] > 1:
-                return False
-            
-        return True
-
-    def iterar(self):
-        for i in range(self.dimensao):
-            self.aprox_atual[i] = self.matriz[i][self.dimensao] #Recebe o b da linha
-
-            for j in range(self.dimensao):
-                if j!= i:
-
-                    if self.aprox_atual[j] != None:
-                        x = self.aprox_atual[j] #Se ja tivermos o xk da iteração atual usamos ele
-                    else:
-                        x = self.aprox_anterior[j] #Se nao, usamos a da anterior
-
-                    self.aprox_atual[i] -= self.matriz[i][j] * x
-
-            self.aprox_atual[i] = self.aprox_atual[i]/self.matriz[i][i]
-
-            if self.truncar != None:
-                self.aprox_atual[i] = self.truncar_num(self.aprox_atual[i])
-
-
-    def resolver(self):
-        if self.verif_convergencia():
-            print("CONVERGE PELO CRITERIO DAS LINHAS!")
+        if alfa > 1:
+            print("Não converge!")
+            return
         else:
-            print("NAO CONVERGE PELO CRITERIO DAS LINHAS, VERIFICANDO SASSENFELD...")
+            print("Converge!")
 
-            if self.verif_sassenfeld():
-                print("CONVERGE POR SASSENFELD!")
-            else:
-                print("NÃO SATISFAZ O CRITERIO DAS LINHAS E NEM DE SASSENFELD!")
-                return
+    # Executando o método
+    parou = False
+    while not parou:
+        aprox_atual = [None] * len(matriz) # atencao
+        for i in range(len(chute_inicial)):
+            aprox_atual[i] = chute_inicial[i]
+
+        for i in range(len(matriz)):
+            b = matriz[i][len(matriz)]
+
+            for j in range(len(matriz)):
+                if j != i:
+                    b -= matriz[i][j] * aprox_atual[j] # assim garantimos que pegamos sempre a mais recente
+
+            b = b/matriz[i][i]
+            aprox_atual[i] = b
+
+        # Verificando parada
+        print("Aproximação {}".format(aprox_atual))
+        max_dif = 0
+        max_x = aprox_atual[0]
+        for i in range(len(matriz)):
+            dif = abs(aprox_atual[i] - chute_inicial[i])
+            if dif > max_dif:
+                max_dif = dif
+
+            if abs(aprox_atual[i]) > max_x:
+                max_x = abs(aprox_atual[i])
+
+        # erro absoluto, você pode descomentar esse e comentar o relativo se quiser.
+        """
+        if max_dif <= precisao:
+            parou = True
+            print("Resposta: {}".format(aprox_atual))
+        """
+
+        # erro relativo
+        if max_dif/max_x <= precisao:
+            parou = True
+            print("Resposta: {}".format(aprox_atual))
         
-        while True:
-            self.iterar()
-            self.n_iter += 1
-
-            #Exibindo na tela
-            print("{}ITERAÇÃO {}{}".format("="*40, self.n_iter, "="*40))
-            print(self.aprox_atual)
-            print()
-
-
-            if(self.verif_parada()):
-                break
-
-            self.aprox_anterior = self.aprox_atual
-            self.aprox_atual = [None]*self.dimensao
+        # caso nao tenha parado
+        chute_inicial = aprox_atual
