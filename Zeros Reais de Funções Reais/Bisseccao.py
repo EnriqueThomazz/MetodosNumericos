@@ -1,44 +1,16 @@
+def Bisseccao(func, a, b, precisao):
 
-class Bisseccao():
-    def __init__(self, func, intervalo, precisao):
-        self.func = func
-        self.intervalo = intervalo
-        self.precisao = precisao
-
-        self.iteracoes = 1
-
-
-    def calc_intervalo(self):
-        f_a = self.func(self.intervalo[0])
-        f_b = self.func(self.intervalo[1])
-
-        meio = (self.intervalo[0] + self.intervalo[1]) / 2
-
-        f_meio = self.func(meio)
-
-        #Substituindo no novo intervalo
-        if (f_meio < 0 and f_b < 0) or (f_meio >= 0 and f_b >= 0):
-            self.intervalo[1] = meio
+    while (b - a > precisao):
+        x_medio = (a+b)/2 # Calculando ponto medio
         
-        elif (f_meio < 0 and f_a < 0) or (f_meio >= 0 and f_a >= 0):
-            self.intervalo[0] = meio
+        func_a = func(a) # Calculando f(a)
+        func_b = func(b) # Calculando f(b)
 
+        func_xm = func(x_medio) # Calculando f(x_medio)
 
-    def verif_parada(self):
-        if(self.intervalo[1] - self.intervalo[0] <= self.precisao): #Se o tamanho do intervalo é menor do que a precisao
-            return True
-        
-        return False
+        if (func_xm > 0 and func_a > 0) or (func_xm <= 0 and func_a <= 0): # Se tiver o mesmo sinal que f(a)
+            a = x_medio
+        elif (func_xm > 0 and func_b > 0) or (func_xm <= 0 and func_b <= 0): # Se tiver o mesmo sinal que f(b)
+            b = x_medio
 
-
-    def resolver(self):
-        print(self.verif_parada)
-        while not self.verif_parada():
-            self.calc_intervalo()
-            print("Intervalo {} = {}".format(self.iteracoes, self.intervalo))
-
-            self.iteracoes += 1
-
-        print("Resultado: {}".format((self.intervalo[0] + self.intervalo[1])/2))
-        return (self.intervalo[0] + self.intervalo[1])/2
-
+    print("Resposta: {}".format((a+b)/2)) # Retorna o ponto médio do intervalo de saída

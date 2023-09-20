@@ -1,45 +1,17 @@
+def FalsaPosicao(func, a, b, precisao):
 
-class FalsaPosicao():
-    def __init__(self, func, intervalo, precisao):
-        self.func = func
-        self.intervalo = intervalo
-        self.precisao = precisao
+    while (b - a > precisao):
+        print("Intervalo: [{}, {}]".format(a, b))
+        func_a = func(a) # Calculando f(a)
+        func_b = func(b) # Calculando f(b)
 
-        self.iteracoes = 1
-
-
-    def verif_parada(self):
-        if self.func(self.meio) <= self.precisao:
-            return True
+        x_medio = (a * func_b - b * func_a) / (func_b - func_a) # Calculando ponto medio
+        print("x_medio = {}".format(x_medio))
         
-        return False
-    
-    def calc_prox(self):
-        f_a = self.func(self.intervalo[0])
-        f_b = self.func(self.intervalo[1])
+        func_xm = func(x_medio) # Calculando f(x_medio)
+        if (func_xm > 0 and func_a > 0) or (func_xm <= 0 and func_a <= 0): # Se tiver o mesmo sinal que f(a)
+            a = x_medio
+        elif (func_xm > 0 and func_b > 0) or (func_xm <= 0 and func_b <= 0): # Se tiver o mesmo sinal que f(b)
+            b = x_medio
 
-        self.meio = (self.intervalo[0] * f_b - self.intervalo[1] * f_a) / (f_b - f_a)
-
-        f_meio = self.func(self.meio)
-
-        #Substituindo no novo intervalo
-        if (f_meio < 0 and f_b < 0) or (f_meio >= 0 and f_b >= 0):
-            self.intervalo[1] = self.meio
-        
-        elif (f_meio < 0 and f_a < 0) or (f_meio >= 0 and f_a >= 0):
-            self.intervalo[0] = self.meio
-
-
-    def resolver(self):
-
-        while True:
-            self.calc_prox()
-            print("Intervalo {} = {}".format(self.iteracoes, self.intervalo))
-
-            self.iteracoes += 1
-
-            if self.verif_parada():
-                break
-
-        print("Resultado: {}".format(self.meio))
-        return self.meio
+    print("Resposta: {}".format((a+b)/2)) # Retorna o ponto médio do intervalo de saída

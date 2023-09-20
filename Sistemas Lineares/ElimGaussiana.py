@@ -8,7 +8,7 @@ def ElimGaussiana(matriz):
         # Pivoteamento parcial
         index_maior = i
         for j in range(i, len(matriz)):
-            if matriz[j][i] > matriz[index_maior][i]:
+            if abs(matriz[j][i]) > abs(matriz[index_maior][i]): # Vendo quem é maior em módulo
                 index_maior = j
 
         matriz[i], matriz[index_maior] = matriz[index_maior], matriz[i]
