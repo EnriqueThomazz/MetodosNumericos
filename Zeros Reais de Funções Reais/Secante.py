@@ -3,8 +3,13 @@ def Secante(funcao, chute_inicial1, chute_inicial2, precisao):
     parou = False
     x_anterior_1 = chute_inicial1
     x_anterior_2 = chute_inicial2
+
+    c = 1
     while not parou:
         x_atual = (x_anterior_1 * funcao(x_anterior_2) - x_anterior_2 * funcao(x_anterior_1)) / (funcao(x_anterior_2) - funcao(x_anterior_1))
+
+        print("Aproximação {}: {}".format(c, x_atual))
+        c += 1
 
         if abs(x_atual - x_anterior_2) <= precisao:
             parou = True
